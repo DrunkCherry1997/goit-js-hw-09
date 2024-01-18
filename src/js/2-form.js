@@ -1,10 +1,10 @@
 const feedbackForm = document.querySelector('.feedback-form');
 const localStorageKey = 'feedback-form-state';
 
-const savedDataForm = JSON.parse(localStorage.getItem(localStorageKey ?? ''));
+const savedDataForm = JSON.parse(localStorage.getItem(localStorageKey)) || {};
 if (savedDataForm) {
-  feedbackForm.elements.email.value = savedDataForm.email;
-  feedbackForm.elements.message.value = savedDataForm.message;
+  feedbackForm.elements.email.value = savedDataForm.email || '';
+  feedbackForm.elements.message.value = savedDataForm.message || '';
 }
 
 feedbackForm.addEventListener('input', evt => {
@@ -17,16 +17,17 @@ feedbackForm.addEventListener('input', evt => {
 
 feedbackForm.addEventListener('submit', evt => {
   evt.preventDefault();
-  if (
-    feedbackForm.elements.email.value === '' ||
-    feedbackForm.elements.message.value === ''
-  ) {
-    console.log('All form fields must be filled in');
+  const trimmedEmail = feedbackForm.elements.email.value.trim();
+  const trimmedMessage = feedbackForm.elements.message.value.trim();
+
+  
+  if (!trimmedEmail || !trimmedMessage) {
+    alert('All form fields must be filled in');
     return;
   } else {
     const resultValue = {
-      email: feedbackForm.elements.email.value,
-      message: feedbackForm.elements.message.value,
+      email: trimmedEmail,
+      message: trimmedMessage,
     };
     console.log(resultValue);
     localStorage.removeItem(localStorageKey);
